@@ -39,4 +39,6 @@ var (
 	metav1NamespaceAll          = types.Name{Package: "k8s.io/apimachinery/pkg/apis/meta/v1", Name: "NamespaceAll"}
 	metav1Object                = types.Name{Package: "k8s.io/apimachinery/pkg/apis/meta/v1", Name: "Object"}
 	watchInterface              = types.Name{Package: "k8s.io/apimachinery/pkg/watch", Name: "Interface"}
+	schemes                     = types.Name{Package: "istio.io/client-go/pkg/clientset/versioned/scheme", Name: "ParameterCodec"}
+	toLower                     = types.Name{Package: "strings", Name: "ToLower"}
 )

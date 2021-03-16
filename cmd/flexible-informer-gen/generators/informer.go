@@ -28,7 +28,7 @@ import (
 	"k8s.io/code-generator/cmd/client-gen/generators/util"
 	clientgentypes "k8s.io/code-generator/cmd/client-gen/types"
 
-	"k8s.io/klog/v2"
+	"k8s.io/klog"
 )
 
 // informerGenerator produces a file of listers for a given GroupVersion and
@@ -96,6 +96,8 @@ func (g *informerGenerator) GenerateType(c *generator.Context, t *types.Type, w 
 		"namespaced":                      !tags.NonNamespaced,
 		"newLister":                       c.Universe.Function(types.Name{Package: listerPackage, Name: "New" + t.Name.Name + "Lister"}),
 		"runtimeObject":                   c.Universe.Type(runtimeObject),
+		"schemes":                         c.Universe.Type(schemes),
+		"toLower":                         c.Universe.Type(toLower),
 		"timeDuration":                    c.Universe.Type(timeDuration),
 		"type":                            t,
 		"v1ListOptions":                   c.Universe.Type(v1ListOptions),
@@ -151,7 +153,30 @@ func NewFiltered$.type|public$Informer(client $.clientSetInterface|raw$$if .name
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.$.group$$.version$().$.type|publicPlural$($if .namespaced$namespace$end$).List(context.TODO(), options)
+
+				var timeout time.Duration
+				if options.TimeoutSeconds != nil {
+					timeout = time.Duration(*options.TimeoutSeconds) * time.Second
+				}
+
+				result := &$.type|raw$List{}
+				unstructuredResult := &unstructured.UnstructuredList{}
+				err := client.$.group$$.version$().RESTClient().Get().$if .namespaced$Namespace(namespace).$end$Resource($.toLower$("$.type|publicPlural$")).VersionedParams(&options, $.schemes|raw$).Timeout(timeout).Do(context.TODO()).Into(unstructuredResult)
+				if err != nil {
+					return nil, err
+				}
+
+				for _, item := range unstructuredResult.Items {
+					r := &$.type|raw${}
+
+					convertErr := runtime.DefaultUnstructuredConverter.FromUnstructured(item.UnstructuredContent(), r)
+					if convertErr != nil {
+						logs.Warn("unable to deserialize object", logs.String("name", item.GetName()), logs.Any("object", item))
+						continue
+					}
+					result.Items = append(result.Items, *r)
+				}
+				return result, nil
 			},
 			WatchFunc: func(options $.v1ListOptions|raw$) ($.watchInterface|raw$, error) {
 				if tweakListOptions != nil {

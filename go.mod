@@ -1,6 +1,6 @@
 // This is a generated file. Do not edit directly.
 
-module k8s.io/code-generator
+module github.com/aspenmesh/code-generator
 
 go 1.15
 
@@ -14,7 +14,9 @@ require (
 	github.com/stretchr/testify v1.6.1 // indirect
 	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b // indirect
 	golang.org/x/text v0.3.4 // indirect
+	k8s.io/code-generator v0.20.4
 	k8s.io/gengo v0.0.0-20201214224949-b6c5ce23f027
+	k8s.io/klog v1.0.0
 	k8s.io/klog/v2 v2.5.0
 	k8s.io/kube-openapi v0.0.0-20201113171705-d219536bb9fd
 )
