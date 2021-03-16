@@ -19,9 +19,10 @@ package main
 import (
 	"flag"
 
+	"github.com/aspenmesh/code-generator/cmd/flexible-informer-gen/generators"
 	"github.com/spf13/pflag"
-	"k8s.io/code-generator/cmd/informer-gen/generators"
 	"k8s.io/code-generator/pkg/util"
+	"k8s.io/gengo/args"
 	"k8s.io/klog/v2"
 
 	generatorargs "k8s.io/code-generator/cmd/informer-gen/args"
