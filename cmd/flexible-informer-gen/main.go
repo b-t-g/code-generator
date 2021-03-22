@@ -20,7 +20,7 @@ import (
 	"flag"
 	"path/filepath"
 
-	"github.com/aspenmesh/code-generator/cmd/flexible-informer-gen/generators"
+	"github.com/jizh6311/code-generator/cmd/flexible-informer-gen/generators"
 	"github.com/spf13/pflag"
 	"k8s.io/code-generator/pkg/util"
 	"k8s.io/gengo/args"
