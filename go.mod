@@ -1,7 +1,6 @@
 // This is a generated file. Do not edit directly.
 
-// Temp testing
-module github.com/jizh6311/code-generator
+module github.com/aspenmesh/code-generator
 
 go 1.15
 
@@ -20,9 +19,4 @@ require (
 	k8s.io/klog v1.0.0
 	k8s.io/klog/v2 v2.5.0
 	k8s.io/kube-openapi v0.0.0-20201113171705-d219536bb9fd
-)
-
-// Temp testing
-replace (
-    github.com/aspenmesh/code-generator => github.com/jizh6311/code-generator
 )
