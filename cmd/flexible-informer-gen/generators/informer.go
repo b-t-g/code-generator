@@ -103,6 +103,8 @@ func (g *informerGenerator) GenerateType(c *generator.Context, t *types.Type, w 
 		"v1ListOptions":                   c.Universe.Type(v1ListOptions),
 		"version":                         namer.IC(g.groupVersion.Version.String()),
 		"watchInterface":                  c.Universe.Type(watchInterface),
+		"isNotFound":                      c.Universe.Type(isNotFound),
+		"newFakeWatch":                    c.Universe.Type(newFakeWatch),
 	}
 
 	sw.Do(typeInformerInterface, m)
@@ -163,6 +165,12 @@ func NewFiltered$.type|public$Informer(client $.clientSetInterface|raw$$if .name
 				unstructuredResult := &unstructured.UnstructuredList{}
 				err := client.$.group$$.version$().RESTClient().Get().$if .namespaced$Namespace(namespace).$end$Resource($.toLower$("$.type|publicPlural$")).VersionedParams(&options, $.schemes|raw$).Timeout(timeout).Do(context.TODO()).Into(unstructuredResult)
 				if err != nil {
+					if $.isNotFound$(err) {
+						logs.warnf("The expected version of CRD for this kind was not found; it may be too old/new or not existing. All the resources for this kind will be ignored", 
+							logs.String("expected type", "$.type|raw$"), logs.String("expected group", "$.group$"), 
+							logs.String("expected version", "$.version$"), logs.ErrorField(err))
+						return result, nil
+					}
 					return nil, err
 				}
 
@@ -182,7 +190,14 @@ func NewFiltered$.type|public$Informer(client $.clientSetInterface|raw$$if .name
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.$.group$$.version$().$.type|publicPlural$($if .namespaced$namespace$end$).Watch(context.TODO(), options)
+				watchObj, err := client.$.group$$.version$().$.type|publicPlural$($if .namespaced$namespace$end$).Watch(context.TODO(), options)
+				if $.isNotFound$(err) {
+					logs.warnf("The expected version of CRD for this kind was not found; it may be too old/new or not existing. All the resources for this kind will be ignored", 
+						logs.String("expected type", "$.type|raw$"), logs.String("expected group", "$.group$"), 
+						logs.String("expected version", "$.version$"), logs.ErrorField(err))
+					return $.newFakeWatch$(), nil
+				}
+				return watchObj, err
 			},
 		},
 		&$.type|raw${},
