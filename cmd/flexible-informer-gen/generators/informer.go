@@ -166,7 +166,7 @@ func NewFiltered$.type|public$Informer(client $.clientSetInterface|raw$$if .name
 				err := client.$.group$$.version$().RESTClient().Get().$if .namespaced$Namespace(namespace).$end$Resource($.toLower$("$.type|publicPlural$")).VersionedParams(&options, $.schemes|raw$).Timeout(timeout).Do(context.TODO()).Into(unstructuredResult)
 				if err != nil {
 					if $.isNotFound|raw$(err) {
-						logs.warnf("The expected version of CRD for this kind was not found; it may be too old/new or not existing. All the resources for this kind will be ignored", 
+						logs.Warn("The expected version of CRD for this kind was not found; it may be too old/new or not existing. All the resources for this kind will be ignored", 
 							logs.String("expected type", "$.type|raw$"), logs.String("expected group", "$.group$"), 
 							logs.String("expected version", "$.version$"), logs.ErrorField(err))
 						return result, nil
@@ -192,7 +192,7 @@ func NewFiltered$.type|public$Informer(client $.clientSetInterface|raw$$if .name
 				}
 				watchObj, err := client.$.group$$.version$().$.type|publicPlural$($if .namespaced$namespace$end$).Watch(context.TODO(), options)
 				if $.isNotFound|raw$(err) {
-					logs.warnf("The expected version of CRD for this kind was not found; it may be too old/new or not existing. All the resources for this kind will be ignored", 
+					logs.Warn("The expected version of CRD for this kind was not found; it may be too old/new or not existing. All the resources for this kind will be ignored", 
 						logs.String("expected type", "$.type|raw$"), logs.String("expected group", "$.group$"), 
 						logs.String("expected version", "$.version$"), logs.ErrorField(err))
 					return $.newFakeWatch|raw$(), nil
