@@ -2,14 +2,13 @@
 
 module k8s.io/code-generator/examples
 
-go 1.15
+go 1.16
 
 require (
-	github.com/go-openapi/spec v0.19.3
 	k8s.io/api v0.0.0
 	k8s.io/apimachinery v0.0.0
 	k8s.io/client-go v0.0.0
-	k8s.io/kube-openapi v0.0.0-20201113171705-d219536bb9fd
+	k8s.io/kube-openapi v0.0.0-20210817084001-7fbd8d59e5b8
 )
 
 replace (
